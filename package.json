@@ -1,0 +1,18 @@
+{
+  "name": "@arijs/vue-prerender",
+  "version": "0.0.1",
+  "description": "Prerender library for Vue 3",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "vue",
+    "prerender"
+  ],
+  "author": "Rafael Hengles <rhengles@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@arijs/stream-xml-parser": "^0.2.0"
+  }
+}
