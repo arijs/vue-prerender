@@ -1,8 +1,10 @@
 var { forEach } = require('./utils/function');
-var { reTrimEnd, reSlashStart } = require('./utils/regexes');
+// var { reTrimEnd, reSlashStart } = require('./utils/regexes');
 var { printTreeAsync } = require('@arijs/stream-xml-parser').printerTransform;
 // var { compile } = require('@vue/compiler-dom');
 // var { minify } = require('terser');
+var reTrimEnd = /\s+$/;
+var reSlashStart = /^\/*/;
 
 function buildScriptComp(item, elAdapter) {
 	var script = elAdapter.initName('script');
@@ -11,8 +13,8 @@ function buildScriptComp(item, elAdapter) {
 	return script;
 }
 
-function buildScriptRender(item, compileHtml) {
-	var compiled = compileHtml(item.load.html.data);
+function buildScriptRender(item, compile) {
+	var compiled = compile(item.load.html.data).code;
 	var script = `
 	assembleComponent(${JSON.stringify(item.comp)}, ${JSON.stringify(item.match.path)}, function() {${compiled};});
 `
@@ -31,7 +33,7 @@ module.exports = function buildCompScripts({
 	elAdapter,
 	globalVar,
 	jsInitialState,
-	compileHtml,
+	compile,
 	formatJs,
 	callback: cbTree
 }) {
@@ -39,7 +41,7 @@ module.exports = function buildCompScripts({
 	var render = '';
 	forEach(list, function(item) {
 		elAdapter.childElement(scripts, buildScriptComp(item, elAdapter));
-		render += buildScriptRender(item, compileHtml);
+		render += buildScriptRender(item, compile);
 	});
 	render += buildScriptInitialState(jsInitialState);
 	scripts = elAdapter.childrenGet(scripts);
@@ -66,13 +68,15 @@ function assembleComponent(croot, cpath, getRender) {
 ${render}
 }(${globalVar});
 `
-		formatJs(render, function(err, code) {
+		formatJs(render).then(function({code}) {
 			code = `${scripts}
 <script>
 ${code}
 </script>
 `;
-			cbTree(err, code);
+			cbTree(printErr, code);
+		}).catch(function(err) {
+			cbTree(err || printErr);
 		});
 	}
 };

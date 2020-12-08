@@ -18,7 +18,7 @@ function createCompLoader({
 	setCompHtml,
 	storeLoads,
 	storeCssData,
-	compileHtml,
+	compile,
 	onMatch,
 	onMatchLoad,
 	onLoad,
@@ -67,11 +67,11 @@ if (jsGlobal) jsGlobal[name] = Comp;
 return Comp;
 
 function setCompHtmlDefault(js, html) {
-	if (compileHtml instanceof Function) {
-		// html = compileHtml(html);
-		// html = Function.call(null, 'Vue', html);
-		// js.render = html(Vue);
-		js.render = compileHtml(html);
+	if (compile instanceof Function) {
+		html = compile(html).code;
+		html = Function.call(null, 'Vue', html);
+		js.render = html(Vue);
+		// js.render = compileHtml(html);
 	} else {
 		js.template = html;
 	}

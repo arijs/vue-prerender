@@ -5,10 +5,11 @@ function initContext({
 	jsGlobalVar = '_app$',
 	jsGlobal = {},
 	jsCtx = {},
+	storeLoads,
 	Vue,
 	VueRouter,
 	compile,
-	compileHtml,
+	// compileHtml,
 	renderToString
 }) {
 
@@ -18,19 +19,21 @@ extend(jsCtx, {
 	VueRouter
 });
 
-compileHtml = compileHtml || compile instanceof Function && function (html) {
-	html = compile(html).code;
-	html = Function.call(null, 'Vue', html);
-	return html(Vue);
-};
+// compileHtml = compileHtml || compile instanceof Function && function (html) {
+// 	html = compile(html).code;
+// 	html = Function.call(null, 'Vue', html);
+// 	return html(Vue);
+// };
 
 return Promise.resolve({
 	jsGlobalVar,
 	jsGlobal,
 	jsCtx,
+	storeLoads,
 	Vue,
 	VueRouter,
-	compileHtml,
+	compile,
+	// compileHtml,
 	renderToString
 });
 

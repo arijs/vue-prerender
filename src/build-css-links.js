@@ -1,5 +1,6 @@
 var { forEach } = require('./utils/function');
-var { reSlashStart } = require('./utils/regexes');
+// var { reSlashStart } = require('./utils/regexes');
+var reSlashStart = /^\/*/;
 
 function buildLink(item, elAdapter) {
 	var link = elAdapter.initName('link');

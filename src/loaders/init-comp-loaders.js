@@ -108,7 +108,7 @@ function resolveUserComponents(name, compAsyncLoad) {
 		defined = match.mapDefined[name] = compAsyncLoad(loader, name);
 		return defined;
 	} else {
-		console.log('/** user component NOT found **/', name);
+		// console.log('/** user component NOT found **/', name);
 	}
 }
 
