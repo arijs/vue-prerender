@@ -1,4 +1,5 @@
 const prefixMatcher = require('./comp-prefix');
+const { forEachProperty } = require('../utils/function');
 
 function fnPathResource(kindName, relPath) {
 	return function(match, ext) {
@@ -26,7 +27,7 @@ function createCompLoader({
 }) {
 
 setCompHtml = setCompHtml || setCompHtmlDefault;
-	
+
 var Comp = prefixMatcher({
 	map: {},
 	mapCss: {},
@@ -36,6 +37,24 @@ var Comp = prefixMatcher({
 	prefix, //: 'app--',
 	basePath, //: appPath('comp/'),
 	jsCtx,
+	jsCtxReplace: function(ctx) {
+		Comp.jsCtx = ctx;
+	},
+	mapClear: function() {
+		clearMap(Comp.map);
+		clearMap(Comp.mapCss);
+		clearMap(Comp.mapDefined);
+		Comp.mapLoad && clearMap(Comp.mapLoad);
+	},
+	mapReplace: function(newComp) {
+		Comp.map = newComp.map;
+		Comp.mapCss = newComp.mapCss;
+		Comp.mapDefined = newComp.mapDefined;
+		Comp.mapLoad = newComp.mapLoad;
+	},
+	getOpt: function() {
+		return { jsGlobal, jsCtx };
+	},
 	waitCss, //: true,
 	pathHtml: fnPathResource('pathHtmlRel', relPath),
 	pathJs  : fnPathResource('pathJsRel',   relPath),
@@ -65,6 +84,12 @@ var Comp = prefixMatcher({
 if (jsGlobal) jsGlobal[name] = Comp;
 
 return Comp;
+
+function clearMap(map) {
+	forEachProperty(map, function(v, k) {
+		map[k] = undefined;
+	});
+}
 
 function setCompHtmlDefault(js, html) {
 	if (compile instanceof Function) {

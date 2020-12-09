@@ -9,9 +9,9 @@ function renderApp(context, vueLoaders, compName) {
 }
 
 renderApp.getAppComponent = getAppComponent;
-function getAppComponent({context, vueLoaders, compName}) {
-	const { resolveUserComponents } = vueLoaders;
-	const App = resolveUserComponents(compName);
+function getAppComponent({context, compName}) {
+	// const { resolveUserComponents } = vueLoaders;
+	const App = context.Vue.resolveComponent(compName);
 	if (!App) throw new Error('App Component not found '+JSON.stringify(compName));
 	return {context, App};
 }

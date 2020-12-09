@@ -30,11 +30,30 @@ forEach(comps, function(comp, i) {
 });
 
 return {
+	forEachComp,
+	jsCtxReplace,
 	getCompsCss,
 	getCompsLoad,
+	mapClear,
 	resolveUserCompLoader,
 	resolveUserComponents,
 };
+
+function forEachComp(callback, result) {
+	return forEach(comps, callback, result);
+}
+
+function jsCtxReplace(ctx) {
+	return forEach(comps, function(comp) {
+		comp.jsCtxReplace(ctx);
+	});
+}
+
+function mapClear() {
+	return forEach(comps, function(comp) {
+		comp.mapClear();
+	});
+}
 
 function resolveUserCompLoader(name) {
 	return forEach(comps, function(comp) {
@@ -50,7 +69,14 @@ function getCompsCss() {
 	// var tries = [ Comp, Page, Block ];
 	var list = [];
 	forEach(comps, function(comp) {
-		forEachProperty(comp.mapCss, function(item) {
+		forEachProperty(comp.mapCss, function(item, k) {
+			if (!item) {
+				console.error(
+					'  <!> Empty mapCss val in '+JSON.stringify(comp.name)+
+					' key '+JSON.stringify(k)+
+					' origin '+JSON.stringify(comp.getOpt().jsGlobal.originRoute)
+				);
+			}
 			item.comp = comp.name;
 			list.push(item);
 		});
