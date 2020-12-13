@@ -5,7 +5,6 @@ var loadScript = require('./script');
 var loadStylesheet = require('./style');
 
 module.exports = function loadComponent(opt) {
-	//console.log('Component Dynamic: '+id);
 	var load = {
 		optMatch: opt,
 		comp: {
@@ -39,42 +38,31 @@ module.exports = function loadComponent(opt) {
 		done: false,
 		order: []
 	};
-	// var {html, js, css, comp} = load;
 	var html = load.html;
 	var js = load.js;
 	var css = load.css;
 	var comp = load.comp;
 	var order = load.order;
 	function anyError() {
-		// var names = [];
 		var list = [];
 		forEach([comp, html, js, css], function(item) {
 			if (item.error) {
-				// names.push(item.name);
 				list.push(
 					'('+item.name+': '+
 					String(item.error.message || item.error)+')'
 				);
-				console.error('Error '+item.name);
-				console.error(item.error);
 			}
 		});
-		// if (comp.error) names.push(comp.name);
-		// if (html.error) names.push(html.name);
-		// if (js  .error) names.push(js  .name);
-		// if (css .error) names.push(css .name);
 		if (list.length) {
 			load.error = new Error(
-				'Component '+opt.name+': '+
-				// names.join(', ')+' // '+
+				'Component '+opt.name+': '+opt.id+': '+
 				list.join(', ')
 			);
-			console.error(load.error);
 		}
 	}
 	function itemLoad() {
 		if (load.done) {
-			// console.warn('loadComponent: done already called', load);
+			// done already called
 		} else if (html.done && js.done && (css.done || !opt.waitCss)) {
 			if (comp.done) {
 				anyError();
@@ -92,7 +80,6 @@ module.exports = function loadComponent(opt) {
 	}
 	loadAjax({
 		url: html.path,
-		// type: loadAjax.types.html,
 		cb(resp) {
 			html.done = true;
 			html.error = resp.error;
@@ -102,19 +89,24 @@ module.exports = function loadComponent(opt) {
 			itemLoad();
 		}
 	});
-	loadScript(js.path, function(error) {
-		js.done = true;
-		js.error = error;
-		if (!error && opt.getJsData) {
-			try {
-				js.data = opt.getJsData(opt);
-			} catch (e) {
-				js.error = e;
+	loadScript({
+		url: js.path,
+		cb(error) {
+			js.done = true;
+			js.error = error;
+			if (!error && opt.getJsData) {
+				try {
+					js.data = opt.getJsData(opt);
+				} catch (e) {
+					js.error = e;
+				}
 			}
-		}
-		order.push(js);
-		itemLoad();
-	}, opt.jsCtx);
+			order.push(js);
+			itemLoad();
+		},
+		ctx: opt.jsCtx,
+		processData: opt.jsProcessData
+	});
 	loadStylesheet(css.path, function(error, data) {
 		css.done = true;
 		css.error = error;

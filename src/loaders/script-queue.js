@@ -5,7 +5,7 @@ function defaultProcessItem(x) {
 }
 
 module.exports = function loadScriptQueue(queue, cb, processItem) {
-	var next;
+	var next, nextCb;
 	processItem = processItem instanceof Function
 		? processItem
 		: defaultProcessItem;
@@ -14,9 +14,10 @@ module.exports = function loadScriptQueue(queue, cb, processItem) {
 	}
 	if (next) {
 		next = processItem(next);
-		loadScript(next.url, function(err) {
+		nextCb = next.cb;
+		next.cb = function(err) {
 			var item = this;
-			if (next.cb instanceof Function) err = next.cb(err);
+			if (nextCb instanceof Function) err = nextCb(err);
 			if (err) {
 				cb(err, [item]);
 			} else {
@@ -26,7 +27,8 @@ module.exports = function loadScriptQueue(queue, cb, processItem) {
 					cb(err, subItems);
 				});
 			}
-		}, next.ctx, next.before, next.after);
+		};
+		loadScript(next);
 	} else {
 		cb();
 	}

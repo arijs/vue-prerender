@@ -9,7 +9,6 @@ function initContext({
 	Vue,
 	VueRouter,
 	compile,
-	// compileHtml,
 	renderToString
 }) {
 
@@ -19,12 +18,6 @@ extend(jsCtx, {
 	VueRouter
 });
 
-// compileHtml = compileHtml || compile instanceof Function && function (html) {
-// 	html = compile(html).code;
-// 	html = Function.call(null, 'Vue', html);
-// 	return html(Vue);
-// };
-
 return Promise.resolve({
 	jsGlobalVar,
 	jsGlobal,
@@ -33,7 +26,6 @@ return Promise.resolve({
 	Vue,
 	VueRouter,
 	compile,
-	// compileHtml,
 	renderToString
 });
 

@@ -1,8 +1,5 @@
 var { forEach } = require('./utils/function');
-// var { reTrimEnd, reSlashStart } = require('./utils/regexes');
 var { printTreeAsync } = require('@arijs/stream-xml-parser').printerTransform;
-// var { compile } = require('@vue/compiler-dom');
-// var { minify } = require('terser');
 var reTrimEnd = /\s+$/;
 var reSlashStart = /^\/*/;
 

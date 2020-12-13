@@ -29,7 +29,7 @@ function openDir(dir, cb) {
 			fs.mkdir(dir, function(err) {
 				if (err) {
 					if ( 'EEXIST' === err.code ) {
-						// mas eu acabei de verificar...
+						// but I just checked...
 						return openDir(dir, cb);
 					} else {
 						return cb(err);

@@ -11,7 +11,6 @@ function parseFile(fpath, parser, cb) {
 		cb(parser.getResult());
 	});
 	rs.on('data', function(data) {
-		// console.log('readFile data:', data);
 		parser.write(data);
 	});
 	rs.on('error', function(err) {

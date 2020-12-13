@@ -30,7 +30,6 @@ function compSetResult(load, cb) {
 	if (!html) err.push('html');
 	if (err.length) {
 		cb({error: new Error(
-			// 'Component '+load.optMatch.name+': '+
 			err.join(', ')+' not found'
 		)});
 	} else {
@@ -56,8 +55,6 @@ function getPrefixPaths(optPrefix, match) {
 	var lastName = path.substr(lastIndex+1);
 	var href = basePath+path+'/'+lastName;
 	var id = prefix.replace(reDash,'/')+path;
-	optPrefix.mapCache = optPrefix.mapCache || {};
-	optPrefix.mapLoading = optPrefix.mapLoading || {};
 	extend(match, optPrefix);
 	match.id = id;
 	match.path = path;
@@ -84,17 +81,15 @@ function prefixLoader(match) {
 	mapLoading[path] = def.promise;
 	match.onLoad = function(load) {
 		mapLoading[path] = undefined;
-		// console.log('Component prefix load', match, load);
 		if (load.error) {
-			def.reject(load.error);//, load);
+			def.reject(load.error);
 			console.log('/** prefix comp reject **/', load.error);
 		} else {
 			mapCache[path] = def.promise;
-			def.resolve(load.comp.data);//, load);
+			def.resolve(load.comp.data);
 			if (onLoad instanceof Function) {
 				onLoad(match, load);
 			}
-			// console.log('/** prefix comp loaded **/', match.id || path);
 		}
 	};
 	loadComponent(match);
@@ -104,7 +99,8 @@ function prefixLoader(match) {
 module.exports = function prefixMatcher(optPrefix) {
 	optPrefix.loader = prefixMatchName;
 	optPrefix.testName = testMatchName;
-	var { onMatch, onMatchLoad } = optPrefix;
+	optPrefix.mapCache = optPrefix.mapCache || {};
+	optPrefix.mapLoading = optPrefix.mapLoading || {};
 	return optPrefix;
 	function testMatchName(name) {
 		return testNamePrefix(name, optPrefix.prefix);
@@ -112,10 +108,11 @@ module.exports = function prefixMatcher(optPrefix) {
 	function prefixMatchName(name) {
 		var match = testNamePrefix(name, optPrefix.prefix);
 		if (match) {
+			var { onMatch } = optPrefix;
 			match = getPrefixPaths(optPrefix, match);
-			// console.log('/** prefix comp found **/', match.id);
 			if (onMatch instanceof Function) onMatch(name, match);
 			return function() {
+				var { onMatchLoad } = optPrefix;
 				if (onMatchLoad instanceof Function) onMatchLoad(name, match);
 				return prefixLoader(match);
 			};

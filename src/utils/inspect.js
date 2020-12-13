@@ -12,8 +12,7 @@ function inspectObj(obj, level) {
 	level = +level || 0;
 	if ('object' === typeof obj && level > 0) {
 		var map = {};
-		// var hop = Object.prototype.hasOwnProperty;
-		for (var k in obj) {//if (hop.call(obj, k)) {
+		for (var k in obj) {
 			map[k] = inspectObj(obj[k], level - 1);
 		}
 		return map;

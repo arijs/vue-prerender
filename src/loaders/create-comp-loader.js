@@ -33,9 +33,9 @@ var Comp = prefixMatcher({
 	mapCss: {},
 	mapDefined: {},
 	mapLoad: storeLoads ? {} : null,
-	name, //: 'Comp',
-	prefix, //: 'app--',
-	basePath, //: appPath('comp/'),
+	name,
+	prefix,
+	basePath,
 	jsCtx,
 	jsCtxReplace: function(ctx) {
 		Comp.jsCtx = ctx;
@@ -53,9 +53,9 @@ var Comp = prefixMatcher({
 		Comp.mapLoad = newComp.mapLoad;
 	},
 	getOpt: function() {
-		return { jsGlobal, jsCtx };
+		return { jsGlobal, jsCtx: Comp.jsCtx };
 	},
-	waitCss, //: true,
+	waitCss,
 	pathHtml: fnPathResource('pathHtmlRel', relPath),
 	pathJs  : fnPathResource('pathJsRel',   relPath),
 	pathCss : fnPathResource('pathCssRel',  relPath),
@@ -73,12 +73,16 @@ var Comp = prefixMatcher({
 			onLoad(match, load);
 		}
 	},
-	onMatch, //: function(name) {
-	// 	lconsole.log(': gal/comp-mat', originRoute, name);
-	// },
-	onMatchLoad, //: function(name) {
-	// 	lconsole.log(': gal/comp-load', originRoute, name);
-	// }
+	onMatch,
+	onMatchLoad,
+	destroy: function() {
+		Comp.mapClear();
+		Comp.map = undefined;
+		Comp.mapCss = undefined;
+		Comp.mapDefined = undefined;
+		Comp.mapLoad = undefined;
+		Comp.jsCtx = jsCtx = undefined;
+	}
 });
 
 if (jsGlobal) jsGlobal[name] = Comp;
@@ -96,7 +100,6 @@ function setCompHtmlDefault(js, html) {
 		html = compile(html).code;
 		html = Function.call(null, 'Vue', html);
 		js.render = html(Vue);
-		// js.render = compileHtml(html);
 	} else {
 		js.template = html;
 	}

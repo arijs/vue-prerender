@@ -1,11 +1,8 @@
 var loadAjax = require('./ajax');
 
-var reWindow = /\bwindow\b/;
-var reGlobal = /\bglobal\b/g;
-var reUrlDebug = /\/header\/header\.js$/;
-var activeDebug = false;
-
-module.exports = function loadScript(url, cb, ctx, before, after) {
+module.exports = loadScript;
+function loadScript(opt) {
+	var {url, cb, ctx, processData} = opt;
 	ctx = ctx || {};
 	var ctxKeys = [];
 	var ctxValues = [];
@@ -17,19 +14,13 @@ module.exports = function loadScript(url, cb, ctx, before, after) {
 		}
 	}
 	loadAjax({
-		url: url,
+		url,
 		cb: function(resp) {
 			var {error, data} = resp;
-			if (error) return cb.call(resp, error);
+			if (error) return cb.call(resp, error, data);
 			try {
-				data = data.replace(reGlobal, 'appGlobal');
-				if (activeDebug && reUrlDebug.test(url)) {
-					console.log('  script '+url);
-					console.log(data);
-				}
-				data = (before || '') + data + (after || '');
-				if (reWindow.test(data)) {
-					console.error(`Script ${url} has a call to window`);
+				if (processData instanceof Function) {
+					data = processData(data, opt);
 				}
 				ctxKeys.push(data);
 				var fn = Function.apply(undefined, ctxKeys);

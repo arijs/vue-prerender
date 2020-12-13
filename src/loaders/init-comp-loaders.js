@@ -1,5 +1,4 @@
 const { forEach, forEachProperty } = require('../utils/function');
-// const { inspectObj } = require('../utils/inspect');
 const {
 	custom: extendCustom,
 	propertyUnfilled,
@@ -23,10 +22,17 @@ const compOptDefault = {
 };
 
 module.exports = initCompLoaders;
-function initCompLoaders(compOpt, comps) {
+function initCompLoaders(compOpt, comps, commonOpt) {
+
+const codCopy = extendCustom(null, null, {}, compOptDefault);
+const {
+	onResolveDefined,
+	onResolveFound,
+	onResolveNotFound,
+} = commonOpt;
 
 forEach(comps, function(comp, i) {
-	comps[i] = createCompLoader(extendCustom(propertyUnfilled, compOptDefault, comp, compOpt));
+	comps[i] = createCompLoader(extendCustom(propertyUnfilled, codCopy, comp, compOpt));
 });
 
 return {
@@ -35,6 +41,7 @@ return {
 	getCompsCss,
 	getCompsLoad,
 	mapClear,
+	destroy,
 	resolveUserCompLoader,
 	resolveUserComponents,
 };
@@ -55,6 +62,12 @@ function mapClear() {
 	});
 }
 
+function destroy() {
+	return forEach(comps, function(comp) {
+		comp.destroy();
+	});
+}
+
 function resolveUserCompLoader(name) {
 	return forEach(comps, function(comp) {
 		const loader = comp.loader(name);
@@ -66,7 +79,6 @@ function resolveUserCompLoader(name) {
 }
 
 function getCompsCss() {
-	// var tries = [ Comp, Page, Block ];
 	var list = [];
 	forEach(comps, function(comp) {
 		forEachProperty(comp.mapCss, function(item, k) {
@@ -85,7 +97,6 @@ function getCompsCss() {
 }
 
 function getCompsLoad() {
-	// var tries = [ Comp, Page, Block ];
 	var list = [];
 	forEach(comps, function(comp) {
 		forEachProperty(comp.mapLoad, function(item) {
@@ -97,23 +108,10 @@ function getCompsLoad() {
 }
 
 function resolveUserComponents(name, compAsyncLoad) {
-	// var tries = [ Comp, Page, Block ];
 	var defined;
 	var loader, match;
-	// console.log(
-	// 	'/** user component loaders '+
-	// 	JSON.stringify(inspectObj(comps, 1))+' for '+
-	// 	JSON.stringify(name)+' **/'
-	// );
 	forEach(comps, function(comp) {
 		var test = comp.testName(name);
-		// console.log(
-		// 	'/** user component test '+
-		// 	JSON.stringify(comp.name)+'/'+
-		// 	JSON.stringify(comp.prefix)+' for '+
-		// 	JSON.stringify(name)+' = '+
-		// 	JSON.stringify(test)+' **/'
-		// );
 		if (!test) return;
 		defined = comp.mapDefined[name];
 		if (defined) {
@@ -127,14 +125,23 @@ function resolveUserComponents(name, compAsyncLoad) {
 		}
 	});
 	if (defined) {
-		console.log('/** user component predefined **/', match.name, name);
+		// console.log('/** user component predefined **/', match.name, name);
+		if (onResolveDefined instanceof Function) {
+			onResolveDefined(match, name);
+		}
 		return defined;
 	} else if (loader) {
-		console.log('/** user component found **/', match.name, name);
+		// console.log('/** user component found **/', match.name, name);
 		defined = match.mapDefined[name] = compAsyncLoad(loader, name);
+		if (onResolveFound instanceof Function) {
+			onResolveFound(match, name);
+		}
 		return defined;
 	} else {
 		// console.log('/** user component NOT found **/', name);
+		if (onResolveNotFound instanceof Function) {
+			onResolveNotFound(name);
+		}
 	}
 }
 

@@ -11,13 +11,11 @@ function writeFile(basePath, subPath, fileData) {
 			return x && !reDots.test(x);
 		});
 		const fileName = subDirs.pop();
-		// console.log('  ~ writeFile', { basePath, subPath, subDirs, fileName });
 		openDirArray(basePath, subDirs.slice(), function(err) {
 			if (err) {
 				return reject(err);
 			}
 			const outputPath = [basePath].concat(subDirs, [fileName]).join(path.sep);
-			// console.log('  ~ writeFile output', outputPath);
 			fs.writeFile(outputPath, fileData, function(err) {
 				return err ? reject(err) : resolve();
 			});
