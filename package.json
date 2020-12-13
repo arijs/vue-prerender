@@ -3,6 +3,10 @@
   "version": "0.0.1",
   "description": "Prerender library for Vue 3",
   "main": "src/index.js",
+	"files": [
+    "src",
+    "README.md"
+	],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
