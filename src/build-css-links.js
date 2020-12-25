@@ -3,7 +3,7 @@ var reSlashStart = /^\/*/;
 
 function buildLink(item, elAdapter) {
 	var link = elAdapter.initName('link');
-	var path = String(item.match.pathCssRel).replace(reSlashStart,'/');
+	var path = String(item.opt.cssRel).replace(reSlashStart,'/');
 	elAdapter.attrsAdd(link, {name: 'rel', value: 'stylesheet'});
 	elAdapter.attrsAdd(link, {name: 'href', value: path });
 	return link;

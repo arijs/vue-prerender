@@ -1,7 +1,7 @@
 
 module.exports = renderApp;
-function renderApp(context, vueLoaders, compName) {
-	return Promise.resolve({context, vueLoaders, compName})
+function renderApp(context, compName) {
+	return Promise.resolve({context, compName})
 	.then(getAppComponent)
 	.then(createApp)
 	.then(renderAppString);

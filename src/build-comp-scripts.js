@@ -5,15 +5,18 @@ var reSlashStart = /^\/*/;
 
 function buildScriptComp(item, elAdapter) {
 	var script = elAdapter.initName('script');
-	var path = String(item.match.pathJsRel).replace(reSlashStart,'/');
+	if (!item.opt?.jsRel) {
+		console.error(' ~  pathJsRel not found in', Object.keys(item.opt || item));
+	}
+	var path = String(item.opt.jsRel).replace(reSlashStart,'/');
 	elAdapter.attrsAdd(script, {name: 'src', value: path });
 	return script;
 }
 
 function buildScriptRender(item, compile) {
-	var compiled = compile(item.load.html.data).code;
+	var compiled = compile(item.html.data).code;
 	var script = `
-	assembleComponent(${JSON.stringify(item.comp)}, ${JSON.stringify(item.match.path)}, function() {${compiled};});
+	assembleComponent(${JSON.stringify(item.comp)}, ${JSON.stringify(item.opt.path)}, function() {${compiled};});
 `
 	return script;
 }
