@@ -1,8 +1,7 @@
-const { forEach } = require('./utils/function');
-const { printerTransform } = require('@arijs/stream-xml-parser');
+import forEach from '@arijs/frontend/src/isomorphic/utils/for-each.mjs';
+import { printerTransform } from '@arijs/stream-xml-parser';
 
-module.exports = printHtml;
-function printHtml({tree, elAdapter}, { level = -1 }, rules) {
+export default function printHtml({tree, elAdapter}, { level = -1 }, rules) {
 	return new Promise(function(resolve, reject) {
 		const am = printerTransform.asyncMatcher(elAdapter);
 		var nodesRep = [];

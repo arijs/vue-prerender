@@ -1,7 +1,7 @@
-var { forEach } = require('./utils/function');
+import forEach from '@arijs/frontend/src/isomorphic/utils/for-each.mjs';
 var reSlashStart = /^\/*/;
 
-function buildLink(item, elAdapter) {
+export function buildCssLink(item, elAdapter) {
 	var link = elAdapter.initName('link');
 	var path = String(item.opt.cssRel).replace(reSlashStart,'/');
 	elAdapter.attrsAdd(link, {name: 'rel', value: 'stylesheet'});
@@ -9,10 +9,10 @@ function buildLink(item, elAdapter) {
 	return link;
 }
 
-module.exports = function buildCssLinks(list, elAdapter) {
+export default function buildCssLinks(list, elAdapter) {
 	var links = elAdapter.initRoot();
 	forEach(list, function(item) {
-		elAdapter.childElement(links, buildLink(item, elAdapter));
+		elAdapter.childElement(links, buildCssLink(item, elAdapter));
 	});
 	return elAdapter.childrenGet(links);
-};
+}

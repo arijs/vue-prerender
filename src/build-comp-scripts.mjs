@@ -1,13 +1,15 @@
-var { forEach } = require('./utils/function');
-var { printTreeAsync } = require('@arijs/stream-xml-parser').printerTransform;
+import forEach from '@arijs/frontend/src/isomorphic/utils/for-each.mjs';
+import StreamXMLParser from '@arijs/stream-xml-parser';
+
 var reTrimEnd = /\s+$/;
 var reSlashStart = /^\/*/;
+var { printerTransform: { printTreeAsync } } = StreamXMLParser;
 
 function buildScriptComp(item, elAdapter) {
 	var script = elAdapter.initName('script');
-	if (!item.opt?.jsRel) {
-		console.error(' ~  pathJsRel not found in', Object.keys(item.opt || item));
-	}
+	// if (!item.opt?.jsRel) {
+	// 	console.error(' ~  pathJsRel not found in', Object.keys(item.opt || item));
+	// }
 	var path = String(item.opt.jsRel).replace(reSlashStart,'/');
 	elAdapter.attrsAdd(script, {name: 'src', value: path });
 	return script;
@@ -28,10 +30,10 @@ function buildScriptInitialState(state) {
 	return script;
 }
 
-module.exports = function buildCompScripts({
+export default function buildCompScripts({
 	list,
 	elAdapter,
-	globalVar,
+	jsGlobalVar,
 	jsInitialState,
 	compile,
 	formatJs,
@@ -66,7 +68,7 @@ function assembleComponent(croot, cpath, getRender) {
 	cdef.resolve(comp);
 }
 ${render}
-}(${globalVar});
+}(${jsGlobalVar});
 `
 		formatJs(render).then(function({code}) {
 			code = `${scripts}
