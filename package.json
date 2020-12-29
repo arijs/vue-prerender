@@ -6,19 +6,39 @@
   "main": "src/index.mjs",
   "files": [
     "src",
+    "lib",
+    "LICENSE",
     "README.md"
   ],
   "scripts": {
+    "build": "./node_modules/.bin/babel src --out-dir lib --verbose",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/arijs/vue-prerender.git"
+  },
+  "bugs": {
+    "url": "https://github.com/arijs/vue-prerender/issues"
+  },
+  "homepage": "https://github.com/arijs/vue-prerender#readme",
   "keywords": [
+    "frontend",
+    "components",
+    "vuejs",
     "vue",
     "prerender"
   ],
   "author": "Rafael Hengles <rhengles@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@arijs/frontend": "^0.2.0",
+    "@arijs/frontend": "^0.2.4",
     "@arijs/stream-xml-parser": "^0.2.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.10",
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "babel-plugin-module-resolver": "^4.1.0"
   }
 }

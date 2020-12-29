@@ -1,4 +1,4 @@
-import forEach from '@arijs/frontend/src/isomorphic/utils/for-each.mjs';
+import forEach from '@arijs/frontend/isomorphic/utils/for-each';
 import { printerTransform } from '@arijs/stream-xml-parser';
 
 export default function printHtml({tree, elAdapter}, { level = -1 }, rules) {

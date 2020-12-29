@@ -1,4 +1,5 @@
-import forEach from '@arijs/frontend/src/isomorphic/utils/for-each.mjs';
+import forEach from '@arijs/frontend/isomorphic/utils/for-each';
+
 var reSlashStart = /^\/*/;
 
 export function buildCssLink(item, elAdapter) {

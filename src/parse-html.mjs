@@ -1,6 +1,6 @@
 import parseFile from './parse-file.mjs';
 import { getParser } from '@arijs/stream-xml-parser';
-import inspect from '@arijs/frontend/src/isomorphic/utils/inspect.mjs';
+import inspect from '@arijs/frontend/isomorphic/utils/inspect';
 
 export default async function parseHtml(filePath) {
 	var parser = getParser();

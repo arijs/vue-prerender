@@ -1,4 +1,4 @@
-import { openDirArray } from '@arijs/frontend/src/server/utils/open-dir.mjs';
+import { openDirArray } from '@arijs/frontend/server/utils/open-dir';
 import fs from 'fs';
 import path from 'path';
 
