@@ -32,7 +32,7 @@
   "author": "Rafael Hengles <rhengles@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@arijs/frontend": "^0.2.4",
+    "@arijs/frontend": "^0.2.8",
     "@arijs/stream-xml-parser": "^0.2.0"
   },
   "devDependencies": {

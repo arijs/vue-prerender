@@ -16,7 +16,7 @@ function buildScriptComp(item, elAdapter) {
 }
 
 function buildScriptRender(item, compile) {
-	var compiled = compile(item.html.data).code;
+	var compiled = compile(item.html.data, {prefixIdentifiers: true}).code;
 	var script = `
 	assembleComponent(${JSON.stringify(item.comp)}, ${JSON.stringify(item.opt.path)}, function() {${compiled};});
 `
@@ -64,8 +64,12 @@ function assembleComponent(croot, cpath, getRender) {
 	const gc = global[croot];
 	const comp = gc.map[cpath];
 	comp.render = getRender();
+	comp.render._rc = true;
+		// Reason for this flag _rc :
+		// https://github.com/vuejs/vue-next/pull/2910#issuecomment-752980088
+		// https://jsfiddle.net/Linusborg/3tkae0jd/
 	gc.mapCache[cpath] = cdef.promise;
-	cdef.resolve(comp);
+	cdef.resolve({comp: {data: comp}});
 }
 ${render}
 }(${jsGlobalVar});
