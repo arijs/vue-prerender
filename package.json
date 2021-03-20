@@ -1,6 +1,6 @@
 {
   "name": "@arijs/vue-prerender",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Prerender library for Vue 3",
   "type": "module",
   "main": "src/index.mjs",
