@@ -10,7 +10,7 @@ export default function parseFile(fpath, parser) {
 			parser.end();
 			var res = parser.getResult();
 			if (res.error) {
-				reject(res.error);
+				reject(res);
 			} else {
 				resolve(res);
 			}
