@@ -1,9 +1,7 @@
 import Vue, { createSSRApp } from 'vue';
 import VueRouter from 'vue-router';
-import VueCompiler from '@vue/compiler-dom';
-const { compile } = VueCompiler;
-import VueServerRenderer from '@vue/server-renderer';
-const { renderToString } = VueServerRenderer;
+import { compile } from '@vue/compiler-dom';
+import { renderToString } from '@vue/server-renderer';
 import { minify } from 'terser';
 
 import {
