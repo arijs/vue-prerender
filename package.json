@@ -33,7 +33,7 @@
   "license": "MIT",
   "dependencies": {
     "@arijs/frontend": "^0.2.14",
-    "@arijs/stream-xml-parser": "^0.2.6"
+    "@arijs/stream-xml-parser": "^0.2.8"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.8",
