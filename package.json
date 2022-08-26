@@ -32,8 +32,8 @@
   "author": "Rafael Hengles <rhengles@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@arijs/frontend": "^0.2.14",
-    "@arijs/stream-xml-parser": "^0.2.8"
+    "@arijs/frontend": "^0.3.0",
+    "@arijs/stream-xml-parser": "^0.2.9"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.8",
